@@ -4,7 +4,8 @@ export async function askTeacher(
   videoContext,
   chatHistory
 ) {
-  const response = await fetch(import.meta.env.VITE_BACKEND_URL, {
+  const BASE_URL = import.meta.env.VITE_BACKEND_URL;
+  const response = await fetch(`${BASE_URL}/ask-teacher`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

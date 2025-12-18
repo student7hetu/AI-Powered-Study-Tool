@@ -25,29 +25,31 @@ app.post('/ask-teacher', async (req, res) => {
   }));
 
   try {
-    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'llama-3.1-8b-instant',
-        messages: [
-          {
-            role: 'system',
-            content: `
+    const response = await fetch(
+      'https://api.groq.com/openai/v1/chat/completions',
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: 'llama-3.1-8b-instant',
+          messages: [
+            {
+              role: 'system',
+              content: `
 You are an economics teacher.
 Answer ONLY from the given chapter and video content.
 Maintain conversation continuity.
 If not covered, say:
 "This is not covered in the provided material."
 `,
-          },
-          ...historyMessages,
-          {
-            role: 'user',
-            content: `
+            },
+            ...historyMessages,
+            {
+              role: 'user',
+              content: `
 CHAPTER CONTENT:
 ${chapterContent}
 
@@ -57,11 +59,12 @@ ${videoContext}
 QUESTION:
 ${question}
 `,
-          },
-        ],
-        temperature: 0.5,
-      }),
-    });
+            },
+          ],
+          temperature: 0.5,
+        }),
+      }
+    );
 
     const rawText = await response.text();
     console.log('GROQ RAW RESPONSE:', rawText);

@@ -42,13 +42,17 @@ const StudyPage = () => {
 
         <div className='bg-slate-800 rounded-lg p-5 shadow space-y-4'>
           <h3 className='text-xl font-medium text-teal-200'>Ask Your Doubts</h3>
-          <p className='text-md text-red-400'>
+          <p className='text-md text-yellow-300'>
             Note: This study tool supports only the chapter “Oligopoly”.
             Questions outside this syllabus will not be answered.
           </p>
           <ChatBox />
         </div>
       </div>
+      <footer className='mt-12 border-t border-slate-700 pt-4 text-center text-sm text-slate-400'>
+        Built as an interactive study tool • Developed by{' '}
+        <span className='text-teal-300 font-medium'>Hetu Patel</span>
+      </footer>
     </div>
   );
 };

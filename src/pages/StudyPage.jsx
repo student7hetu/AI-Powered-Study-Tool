@@ -1,5 +1,6 @@
 import React from 'react';
 import videoSummaries from '../data/videoSummaries';
+import ChatBox from '../components/chat/ChatBox';
 
 const StudyPage = () => {
   return (
@@ -24,6 +25,11 @@ const StudyPage = () => {
             <p>Exam Focus: {video.examFocus}</p>
           </div>
         ))}
+      </section>
+
+      <section>
+        <h3>Ask Your Doubts</h3>
+        <ChatBox />
       </section>
     </div>
   );

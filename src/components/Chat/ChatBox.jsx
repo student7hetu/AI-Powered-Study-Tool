@@ -1,48 +1,84 @@
-import React, { useState } from 'react';
+import { useState } from "react";
+import { askTeacher } from "../../services/aiService";
+import chapterContent from "../../data/chapterContent";
+import videoSummaries from "../../data/videoSummaries";
 
 const ChatBox = () => {
-  const [message, setMessage] = useState([]);
-  const [input, setInput] = useState('');
+  const [messages, setMessages] = useState([]);
+  const [input, setInput] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSend = () => {
-    if (!input.trim()) return;
+  const videoContext = videoSummaries
+    .map((video) => `${video.title}: ${video.summary}`)
+    .join("\n");
+
+  const handleSend = async () => {
+    if (!input.trim() || isLoading) return;
 
     const studentMessage = {
-      sender: 'student',
+      sender: "student",
       text: input,
     };
 
-    const teacherMessage = {
-      sender: 'teacher',
-      text: "Good question. We'll discuss this shortly.",
-    };
+    setMessages((prev) => [...prev, studentMessage]);
+    setInput("");
+    setIsLoading(true);
 
-    setMessage([...message, studentMessage, teacherMessage]);
-    setInput('');
+    try {
+      const teacherReply = await askTeacher(input);
+
+      const teacherMessage = {
+        sender: "teacher",
+        text: teacherReply,
+      };
+
+      setMessages((prev) => [...prev, teacherMessage]);
+    } catch (error) {
+      setMessages((prev) => [
+        ...prev,
+        {
+          sender: "teacher",
+          text: "Sorry, I couldn’t answer that right now.",
+        },
+      ]);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
-    <div style={{ border: '1px solid #ccc', padding: '12px' }}>
-      <h4>Student-Teacher Dialogue</h4>
+    <div style={{ border: "1px solid #ccc", padding: "12px" }}>
+      <h4>Student–Teacher Dialogue</h4>
 
-      <div style={{ minHeight: '200px', marginBottom: '10px' }}>
-        {message.map((msg, index) => (
+      <div style={{ minHeight: "200px", marginBottom: "10px" }}>
+        {messages.map((msg, index) => (
           <p key={index}>
-            <strong>{msg.sender === 'student' ? 'Student' : 'Teacher'}:</strong>{' '}
+            <strong>
+              {msg.sender === "student" ? "Student" : "Teacher"}:
+            </strong>{" "}
             {msg.text}
           </p>
         ))}
+
+        {isLoading && (
+          <p>
+            <strong>Teacher:</strong> Thinking...
+          </p>
+        )}
       </div>
 
       <input
-        type='text'
-        placeholder='Ask your doubt...'
+        type="text"
+        placeholder="Ask your doubt..."
         value={input}
+        disabled={isLoading}
         onChange={(e) => setInput(e.target.value)}
-        style={{ width: '80%' }}
+        style={{ width: "80%" }}
       />
 
-      <button onClick={handleSend} style={{ marginLeft: '8px' }}></button>
+      <button onClick={handleSend} disabled={isLoading}>
+        {isLoading ? "Thinking..." : "Send"}
+      </button>
     </div>
   );
 };

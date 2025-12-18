@@ -1,6 +1,5 @@
-import React from 'react';
 import videoSummaries from '../data/videoSummaries';
-import ChatBox from '../components/chat/ChatBox';
+import ChatBox from '../components/Chat/ChatBox';
 
 const StudyPage = () => {
   return (
